@@ -3983,6 +3983,18 @@
     }
   }
 
+  function chunkclean() {
+    MEM.xmin = Math.max(MEM.xmin, MEM.cursx - MEM.windx);
+    MEM.xmax = Math.min(MEM.xmax, MEM.cursx + MEM.windx*2);
+    var startSize = MEM.chunks.length;
+    for (var i = MEM.chunks.length-1; i>=0; i--) {
+        if(MEM.chunks[i].x < MEM.xmin || MEM.chunks[i].x > MEM.xmax) {
+            MEM.chunks.splice(i, 1);
+        }
+    }
+    console.log("Removed " + (startSize-MEM.chunks.length) + " entries");
+  }
+
   document.addEventListener("mousemove", onMouseUpdate, false);
   document.addEventListener("mouseenter", onMouseUpdate, false);
   mouseX = 0;
@@ -4019,6 +4031,7 @@
 
     self.chunkloader(MEM.cursx, MEM.cursx + MEM.windx);
     self.chunkrender(MEM.cursx, MEM.cursx + MEM.windx);
+    self.chunkclean();
 
     document.getElementById("BG").innerHTML =
       "<svg id='SVG' xmlns='http://www.w3.org/2000/svg' width='" +
